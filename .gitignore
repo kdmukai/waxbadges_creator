@@ -34,7 +34,6 @@ __pycache__
 *.out
 *.app
 *.wasm
-build/
 
 # NPM
 node_modules/
