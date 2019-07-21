@@ -23,12 +23,13 @@ see the main repo: [https://github.com/kdmukai/waxbadges](https://github.com/kdm
     * You have to spend WAX to buy blockchain storage space
     * _(how much? A couple hundred kB is fine for starters)_
     * _(you can also sell unused RAM back if you change your mind later)_
-* Download the static html/js files from this repo's [build/](build/) directory
-    * Or build it from source yourself
-* Customize the `local_settings.js` file
+* Clone this repo to your local machine
+    * git clone https://github.com/kdmukai/waxbadges_creator.git .
+    * _optionally build the project yourself (see below)_
+* Customize the `build/local_settings--example.js` file
     * Enter your account's private key stored in Scatter
     * Enter the associated WAX account name (e.g. abc12.waa)
-* Double click the `index.html` to run it as a locally-hosted webpage
+* Double click `build/index.html` to run it as a locally-hosted webpage
 
 Now that you've hard-coded your private key you must keep these files secure on your local machine. Never upload or host these files on the web! The CREATOR tool looks and acts like a normal website, but treat it as if it were an app that is installed on your local machine. If anyone else on your team needs access, they'll have to download and customize their own copy.
 
@@ -53,6 +54,16 @@ Grab the `npm` modules:
 ```
 npm init
 npm install
+```
+
+Customize the `src/local_settings--example.js` file:
+```
+/**
+    Enter your WAX blockchain private key and associated account id. Save this
+    file as local_settings.js
+**/
+var PRIVATE_KEY = '';
+var ACCOUNT = '';   // e.g. WAX All Access account like 'abc12.waa' or 12-char WAX blockchain account
 ```
 
 Build for dev:
