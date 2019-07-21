@@ -23,7 +23,7 @@ see the main repo: [https://github.com/kdmukai/waxbadges](https://github.com/kdm
     * You have to spend WAX to buy blockchain storage space
     * _(how much? A couple hundred kB is fine for starters)_
     * _(you can also sell unused RAM back if you change your mind later)_
-* Download the static html/js files from build/
+* Download the static html/js files from this repo's [build/](build/) directory
     * Or build it from source yourself
 * Customize the `local_settings.js` file
     * Enter your account's private key stored in Scatter
