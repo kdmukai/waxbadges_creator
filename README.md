@@ -6,7 +6,7 @@ _A tool for game studios (and anyone else) to create their own WAXBadges achieve
 twitter: [@WAXBadges](https://twitter.com/WAXBadges)
 
 
-This creator is built as static html/JS that you run locally to create and management your WAXBadges achievements. By running locally we can make some safe-ish security compromises that greatly enhance your workflow speed (i.e. hard-coding your private key for instant transaction signing; normally a MEGA no-no!!).
+This creator is built as static html/JS that you run locally to create and manage your WAXBadges achievements. By running locally we can make some safe-ish security compromises that greatly enhance your workflow speed (i.e. hard-coding your private key for instant transaction signing; normally a MEGA no-no!!).
 
 
 ### What is WAXBadges?
