@@ -7,8 +7,8 @@
 
         <title>WAXBadges Achievements CREATOR</title>
 
-        <script src="local_settings.js" ></script>
-        <script src="app.js" ></script>
+        <script src="/local_settings.js" ></script>
+        <script src="/app.js" ></script>
 
         <style>
             /* latin-ext */
@@ -64,7 +64,7 @@
             .stylized_button {
                 display: inline-block;
                 margin: auto;
-                margin-top: 1em;
+                /*margin-top: 1em;*/
                 cursor: pointer;
                 border: 2px solid #6cc7cc;
                 border-radius: 1em;
@@ -96,6 +96,7 @@
                 font-size: 0.7em;
                 line-height: 0.7em;
                 padding: 0.5em;
+                border: 1px solid #6cc7cc;
             }
 
             table td {
@@ -108,7 +109,7 @@
             table .value {
                 text-align: left;
             }
-            table input[type='text'] {
+            table input[type='text'], table input[type='number'] {
                 font-size: 1em;
                 padding: 0.25em;
                 border-radius: 0.5em;
@@ -122,10 +123,40 @@
             }
 
 
+            /**
+             * Clearfix helper
+             * Used to contain floats: h5bp.com/q
+             */
+
+            .clearfix:before,
+            .clearfix:after {
+                content: "";
+                display: table;
+            }
+
+            .clearfix:after {
+                clear: both;
+            }
+
+
+            .page_container {
+                display: none;
+            }
+
             .page_title {
               text-align: center;
               font-size: 1.6em;
-              margin-bottom: 1em;
+              margin-bottom: 0.5em;
+            }
+            .ecosystem_description {
+                text-align: center;
+                margin-bottom: 1em;
+            }
+
+            .intro {
+                max-width: 640px;
+                margin: auto;
+                text-align: justify;
             }
             .page_content {
                 background-color: #222;
@@ -133,6 +164,20 @@
                 padding: 1em;
                 border: 3px solid #6cc7cc;
                 border-radius: 1em;
+                margin-bottom: 3em;
+            }
+
+            .section_note {
+                margin-top: 1em;
+                text-align: center;
+                max-width: 550px;
+                margin: auto;
+                color: #666;
+            }
+
+            .help {
+                margin: auto;
+                text-align: center;
             }
 
             .overlay_content_container {
@@ -149,6 +194,15 @@
                 margin-top: 0;
                 font-size: 1.5em;
                 padding-bottom: 1em;
+            }
+
+
+            .item_row {
+                padding: 0.5em;
+                background-color: #333;
+            }
+            .alt_row {
+                background-color: #444;
             }
 
 
@@ -177,7 +231,7 @@
 
             #show_log_button {
                 float: right;
-                position: absolute;
+                position: fixed;
                 bottom: 1em;
                 right: 1em;
             }
@@ -191,7 +245,7 @@
                 background-color: #333;
                 border-top: 4px solid black;
                 color: #ccc;
-                position: absolute;
+                position: fixed;
                 bottom: 0;
                 width: 100%;
                 height: 0;
@@ -217,22 +271,17 @@
 
     </header>
     <body>
-        <a href="/"><img width="175" height="36" src="img/waxbadges_logo_350x72.png" /></a>
+        <a href="/"><img width="175" height="36" src="/img/waxbadges_logo_350x72.png" /></a>
 
         <div class="main_content">
 
 
-            <div id="page_index">
+            <div id="page_index" class="page_container">
                 <style>
-                    .intro {
-                        max-width: 640px;
-                        margin: auto;
-                        text-align: justify;
-                    }
-
                     .account_container {
                         margin-top: 1em;
                         text-align: center;
+                        margin-bottom: 2em;
                     }
                     .account_display {
                         font-weight: bold;
@@ -241,9 +290,22 @@
                     .ecosystems_container {
                         margin: auto;
                         margin-top: 2em;
+                        margin-bottom: 5em;
                     }
                     .ecosystems_list {
+                        margin-left: 2em;
                         margin-bottom: 2em;
+                    }
+                    .hierarchy {
+                        margin-top: 1em;
+                        padding: 1em;
+                        background-color: #222;
+                        color: #d8d8d8;
+                        font-size: 0.8em;
+                        line-height: 1.4em;
+                        text-align: left;
+                        margin: auto;
+                        max-width: 500px;
                     }
                 </style>
                 <div class="page_title">WAXBadges Achievements CREATOR</div>
@@ -253,49 +315,213 @@
 
                 <div class="account_container">Active account: <span class="account_name account_display"></span></div>
 
+
                 <div class="ecosystems_container page_content">
                     Your Ecosystems:
-                    <div class="ecosystems_list"></div>
+                    <div class="section_note">
+                        Each game, app, etc should be organized under its own WAXBadges Ecosystem. Create your first
+                        ecosystem to get started!
+                    </div>
+                    <div class="ecosystems_list">
+                        <table id="ecosystems_table">
+                        </table>
+                    </div>
                     <span class="stylized_button" id="add_ecosys_button">add ecosystem</span>
                 </div>
+
+                <div class="help">
+                    <h3>Quick Overview</h3>
+                    WAXBadges achievements are organized in a simple hierarchy:<br/>
+                    <br/>
+                    <pre class="hierarchy">
+    Ecosystem: "Banzai's Great Adventure"
+    |
+    +----Category: "Solo"
+    |    |
+    |    +----Achievement: "Coin Master"
+    |    +----Achievement: "Treasure Finder"
+    |    +----Achievement: "Grinder Extraordinaire"
+    |
+    +----Category: "Team"
+         |
+         +----Achievement: "Purple Heart"
+         +----Achievement: "My Savior"
+         +----Achievement: "MVP"
+         +----Achievement: "Da GOAT"
+                    </pre>
+                </div>
+
+
+                <div id="add_ecosys_container" class="overlay_content_container">
+                    <div class="dialog_title"><span id="add_ecosys_dialog_action">Add</span> Ecosystem</div>
+                    <input type="hidden" id="add_ecosys_ecosystem_id" />
+                    <table>
+                        <tr>
+                            <td class="label">account:</td>
+                            <td class="value"><span class="account_name"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="label">ecosystem name:</td>
+                            <td class="value"><input type="text" id="add_ecosys_name" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">description:</td>
+                            <td class="value"><textarea id="add_ecosys_description"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="label">website:</td>
+                            <td class="value"><input type="text" id="add_ecosys_website" placeholder="https://..." /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">asset base url:<br/>&nbsp;</td>
+                            <td class="value"><input type="text" id="add_ecosys_assetbaseurl" />
+                                <div class="note">domain name plus directory: e.g. "mysite.com/assets"</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">ecosystem logo:</td>
+                            <td class="value"><input type="text" id="add_ecosys_logoassetname" placeholder="mylogo_256x256.png" /></td>
+                        </tr>
+                    </table>
+                    <div class="stylized_button stylized_button_large" id="add_ecosys_submit_button">submit</div>
+                </div>
+
             </div>
 
+
+
+            <div id="page_ecosys" class="page_container">
+                <style>
+                    .categories_list {
+                        margin-top: 1em;
+                        margin-left: 2em;
+                        margin-bottom: 2em;
+                    }
+                    .achievements_list {
+                        margin-top: 1em;
+                        margin-left: 1em;
+                        margin-bottom: 1em;
+                    }
+                    .achievement_entry {
+                        text-align: left;
+                        padding: 0.5em;
+                        margin-bottom: 1em;
+                        margin-right: 1em;
+                        background-color: #222;
+                        border: 1px solid #444;
+                    }
+                    .ach_actions {
+                        float: right;
+                    }
+                    .ach_asset {
+                        float: left;
+                        margin-right: 0.5em;
+                        width: 75px;
+                        height: 75px;
+                        border-radius: 0.5em;
+                    }
+                    .ach_description {
+                        font-size: 0.8em;
+                        color: #666;
+                    }
+                </style>
+                <div class="page_title"></div>
+                <div class="ecosystem_description"></div>
+
+                <div class="account_container">Active account: <span class="account_name account_display"></span></div>
+
+                <div class="categories_container page_content">
+                    Your Categories:
+                    <div class="section_note">
+                        Achievements within each Ecosystem are organized within Categories. You'll need at least one
+                        Category to get started.
+                    </div>
+                    <div class="categories_list"></div>
+                    <span class="stylized_button" id="add_category_button">add category</span>
+                </div>
+
+
+                <div id="add_category_container" class="overlay_content_container">
+                    <div class="dialog_title"><span id="add_category_dialog_action">Add</span> category</div>
+                    <input type="hidden" id="add_category_category_id" />
+                    <table>
+                        <tr>
+                            <td class="label">category name:</td>
+                            <td class="value"><input type="text" id="add_category_name" /></td>
+                        </tr>
+                    </table>
+                    <div class="stylized_button stylized_button_large" id="add_category_submit_button">submit</div>
+                </div>
+
+
+                <div id="add_achievement_container" class="overlay_content_container">
+                    <div class="dialog_title"><span id="add_achievement_dialog_action">Add</span> achievement</div>
+                    <input type="hidden" id="add_achievement_category_id" />
+                    <input type="hidden" id="add_achievement_achievement_id" />
+                    <table>
+                        <tr>
+                            <td class="label">achievement name:</td>
+                            <td class="value"><input type="text" id="add_achievement_name" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">description:</td>
+                            <td class="value"><textarea id="add_achievement_description"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td class="label">asset name:<br/>&nbsp;</td>
+                            <td class="value"><input type="text" id="add_achievement_assetname" />
+                                <div class="note">url relative to Ecosystem.baseasseturl or absolute https:// url</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">max quantity:<br/>&nbsp;</td>
+                            <td class="value"><input type="number" id="add_achievement_maxquantity" value="0" />
+                                <div class="note">0 == unlimited</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="stylized_button stylized_button_large" id="add_achievement_submit_button">submit</div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <div id="page_users" class="page_container">
+                <style>
+                    .users_list {
+                        margin-top: 1em;
+                        margin-left: 2em;
+                        margin-bottom: 2em;
+                    }
+                </style>
+                <div class="page_title"></div>
+                <div class="ecosystem_description"></div>
+
+                <div class="account_container">Active account: <span class="account_name account_display"></span></div>
+
+                <div class="users_container page_content">
+                    Your Users:
+                    <div class="users_list"></div>
+                    <span class="stylized_button" id="add_user_button">add user</span>
+                </div>
+
+
+            </div>
+
+
+
+
         </div>
 
 
-        <div id="add_ecosys_container" class="overlay_content_container">
-            <div class="dialog_title"><span class="dialog_action">Add</span> Ecosystem</div>
-            <input type="hidden" id="add_ecosys_ecosystem_id" />
-            <table>
-                <tr>
-                    <td class="label">account:</td>
-                    <td class="value"><span class="account_name"></span></td>
-                </tr>
-                <tr>
-                    <td class="label">ecosystem name:</td>
-                    <td class="value"><input type="text" id="add_ecosys_name" /></td>
-                </tr>
-                <tr>
-                    <td class="label">description:</td>
-                    <td class="value"><textarea id="add_ecosys_description"></textarea></td>
-                </tr>
-                <tr>
-                    <td class="label">website:</td>
-                    <td class="value"><input type="text" id="add_ecosys_website" placeholder="https://..." /></td>
-                </tr>
-                <tr>
-                    <td class="label">asset base url:<br/>&nbsp;</td>
-                    <td class="value"><input type="text" id="add_ecosys_assetbaseurl" />
-                        <div class="note">domain name plus directory: e.g. "mysite.com/assets"</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">ecosystem logo:</td>
-                    <td class="value"><input type="text" id="add_ecosys_logoassetname" placeholder="mylogo_256x256.png" /></td>
-                </tr>
-            </table>
-            <div class="stylized_button stylized_button_large" id="add_ecosys_submit_button">submit</div>
-        </div>
+
+
+
+
 
         <div class="stylized_button stylized_button_tiny" id="show_log_button">show log</div>
         <div id="log_container">
@@ -305,7 +531,7 @@
 
 
         <div id="loading_overlay">
-            <div id="loading_container"><img src="img/loading.svg" /></div>
+            <div id="loading_container"><img src="/img/loading.svg" /></div>
         </div>
     </body>
 </html>

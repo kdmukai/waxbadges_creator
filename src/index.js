@@ -71,7 +71,7 @@ async function renderIndex() {
 
         writeLog(JSON.stringify(resp.rows, null, 2));
 
-        $("#page_index .ecosystems_list").empty();
+        $("#ecosystems_table").empty();
 
         if (resp.rows.length == 0) {
             $(".ecosystems_container .section_note").show();
@@ -79,10 +79,18 @@ async function renderIndex() {
             $(".ecosystems_container .section_note").hide();
             for(var i=0; i < resp.rows.length; i++) {
                 var ecosystem = resp.rows[i];
-                $("#page_index .ecosystems_list").append("<div id='ecosys_entry_" + ecosystem.key + "'><a href='/ecosys/" + ecosystem.key + "'>" + ecosystem.name + "</a>&nbsp;&nbsp;&nbsp;<span class='stylized_button stylized_button_tiny' id='edit_ecosys_" + ecosystem.key + "'>edit</span></div>");
+
+                let $tr = $("<tr></tr>");
+                $tr.append("<td>" + ecosystem.name + "&nbsp;&nbsp;&nbsp;<span class='stylized_button stylized_button_tiny' id='edit_ecosys_" + ecosystem.key + "'>edit</span></td>");
                 if (i == resp.rows.length - 1) {
                     $("#ecosys_entry_" + ecosystem.key).append("&nbsp;|&nbsp;<span class='stylized_button stylized_button_tiny' id='rm_ecosys_" + ecosystem.key + "'>delete</span>");
                 }
+                $tr.append("<td>|</td>");
+                $tr.append("<td><a href='/ach/" + ecosystem.key + "'>Categories & Achievements</td>");
+                $tr.append("<td>|</td>");
+                $tr.append("<td><a href='/users/" +  ecosystem.key + "'>Users & Grants</a></td>");
+                $("#ecosystems_table").append($tr);
+
                 // Wire up its edit click
                 $("#edit_ecosys_" + ecosystem.key).unbind();
                 $("#edit_ecosys_" + ecosystem.key).click(function() {
@@ -189,7 +197,6 @@ async function renderIndex() {
 
 
 
-
 async function renderEcosys(key) {
     const resp = await rpc.get_table_rows({
         json: true,              // Get the response as json
@@ -211,8 +218,7 @@ async function renderEcosys(key) {
 
     var ecosystem = resp.rows[0];
     $(".page_title").text(ecosystem.name);
-    $("#ecosystem_website").append("<a href='" + ecosystem.website + "' target='_new'>" + ecosystem.website + "</a>");
-    $("#ecosystem_description").text(ecosystem.description);
+    $(".ecosystem_description").text(ecosystem.description);
 
     $("#page_ecosys").find(".categories_list").empty();
 
@@ -276,8 +282,7 @@ async function renderEcosys(key) {
                 $("#cat_" + category.key + "_achivements_list").append($ach_template);
 
                 let $action_div = $("<div class='ach_actions'></div>");
-                $action_div.append("<span class='stylized_button stylized_button_tiny' id='grant_cat_" + category.key + "_ach_" + achievement.key + "'>grant</span>");
-                $action_div.append("&nbsp;&nbsp;|&nbsp;&nbsp;<span class='stylized_button stylized_button_tiny' id='edit_cat_" + category.key + "_ach_" + achievement.key + "'>edit</span>");
+                $action_div.append("<span class='stylized_button stylized_button_tiny' id='edit_cat_" + category.key + "_ach_" + achievement.key + "'>edit</span>");
                 if (is_deleteable)
                     $action_div.append("&nbsp;&nbsp;|&nbsp;&nbsp;<span class='stylized_button stylized_button_tiny' id='delete_cat_" + category.key + "_ach_" + achievement.key + "'>delete</span>");
                 $ach_template.append($action_div);
@@ -424,6 +429,42 @@ async function renderEcosys(key) {
 
 
 
+async function renderUsers(key) {
+    const resp = await rpc.get_table_rows({
+        json: true,              // Get the response as json
+        code: CONTRACT,     // Contract that we target
+        scope: CONTRACT,         // Account that owns the data
+        table: 'ecosystems',        // Table name
+        lower_bound: key,
+        upper_bound: key,
+        limit: 1,               // Maximum number of rows that we want to get
+    });
+
+    writeLog(JSON.stringify(resp.rows, null, 2));
+    console.log(resp.rows);
+
+    if (resp.rows.length == 0) {
+        window.location.href = "/";
+        return;
+    }
+
+    var ecosystem = resp.rows[0];
+    $(".page_title").text(ecosystem.name);
+    $(".ecosystem_description").text(ecosystem.description);
+
+    $("#page_users").find(".users_list").empty();
+
+
+
+
+
+    hideLoading();
+    $("#page_users").show();
+}
+
+
+
+
 function showLog() {
     let offset = $("#hide_log_button").outerHeight() + 20;
 
@@ -538,8 +579,10 @@ $(document).ready(function() {
     if (page != "") {
         param = parseInt(pathParts[2]);
     }
-    if (page == 'ecosys') {
+    if (page == 'ach') {
         renderEcosys(param);
+    } else if (page == 'users') {
+        renderUsers(param);
     } else {
         renderIndex();
     }

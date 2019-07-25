@@ -146,7 +146,11 @@
             .page_title {
               text-align: center;
               font-size: 1.6em;
-              margin-bottom: 1em;
+              margin-bottom: 0.5em;
+            }
+            .ecosystem_description {
+                text-align: center;
+                margin-bottom: 1em;
             }
 
             .intro {
@@ -318,7 +322,10 @@
                         Each game, app, etc should be organized under its own WAXBadges Ecosystem. Create your first
                         ecosystem to get started!
                     </div>
-                    <div class="ecosystems_list"></div>
+                    <div class="ecosystems_list">
+                        <table id="ecosystems_table">
+                        </table>
+                    </div>
                     <span class="stylized_button" id="add_ecosys_button">add ecosystem</span>
                 </div>
 
@@ -419,6 +426,7 @@
                     }
                 </style>
                 <div class="page_title"></div>
+                <div class="ecosystem_description"></div>
 
                 <div class="account_container">Active account: <span class="account_name account_display"></span></div>
 
@@ -476,6 +484,36 @@
                 </div>
 
             </div>
+
+
+
+
+
+
+            <div id="page_users" class="page_container">
+                <style>
+                    .users_list {
+                        margin-top: 1em;
+                        margin-left: 2em;
+                        margin-bottom: 2em;
+                    }
+                </style>
+                <div class="page_title"></div>
+                <div class="ecosystem_description"></div>
+
+                <div class="account_container">Active account: <span class="account_name account_display"></span></div>
+
+                <div class="users_container page_content">
+                    Your Users:
+                    <div class="users_list"></div>
+                    <span class="stylized_button" id="add_user_button">add user</span>
+                </div>
+
+
+            </div>
+
+
+
 
         </div>
 
