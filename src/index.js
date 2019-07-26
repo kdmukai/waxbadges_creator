@@ -276,7 +276,7 @@ async function renderEcosys(key) {
             for (var j=0; j < category.achievements.length; j++) {
                 let achievement = category.achievements[j];
                 achievement.key = j;
-                let is_deleteable = (achievement.usersgranted.length == 0);
+                let is_deleteable = (achievement.usergrants.length == 0);
 
                 let $ach_template = $("<div id='cat_" + category.key + "_ach_" + achievement.key + "' class='achievement_entry'></div>")
                 $("#cat_" + category.key + "_achivements_list").append($ach_template);
@@ -348,7 +348,7 @@ async function renderEcosys(key) {
         let maxquantity = $("#add_achievement_maxquantity").val();
 
         if (name == "") {
-            alert("category name is required!");
+            alert("achievement name is required!");
             return;
         }
 
@@ -452,9 +452,154 @@ async function renderUsers(key) {
     $(".page_title").text(ecosystem.name);
     $(".ecosystem_description").text(ecosystem.description);
 
-    $("#page_users").find(".users_list").empty();
+    // First store the original User indices as User.key
+    for (var i = 0; i < ecosystem.users.length; i++) {
+        let user = ecosystem.users[i];
+        user.key = i;
+    }
+    // Sort users alphabetically by User.name, ignoring capitalization
+    ecosystem.users.sort((a, b) => { return (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1); })
 
 
+    // Populate the Achievement select droplist
+    $("#grant_achievements_list").empty();
+    $("#grant_achievements_list").append("<option></option>")
+    for (var i=0; i < ecosystem.categories.length; i++) {
+        let category = ecosystem.categories[i];
+        for (var j=0; j < category.achievements.length; j++) {
+            let achievement = category.achievements[j];
+            $("#grant_achievements_list").append("<option value='ach_" + i + "_" + j + "'>" + achievement.name + "</option>");
+        }
+    }
+
+    // Populate the Users select droplist
+    $("#grant_users_list").empty();
+    $("#grant_users_list").append("<option></option>")
+    for (var i=0; i < ecosystem.users.length; i++) {
+        let user = ecosystem.users[i];
+        $("#grant_users_list").append("<option value='" + user.key + "'>" + user.name + "</option>");
+    }
+
+    // wire up grant_submit
+    $("#grant_submit").unbind();
+    $("#grant_submit").click(function() {
+        if ($("#grant_achievements_list").val() == "") {
+            alert("Select an Achievement");
+            return;
+        }
+        if ($("#grant_users_list").val() == "") {
+            alert("Select a User");
+            return;
+        }
+        let user_id = $("#grant_users_list").val();
+        let category_id = $("#grant_achievements_list").val().split('_')[1];
+        let achievement_id = $("#grant_achievements_list").val().split('_')[2];
+
+        let contractFunction = "grantach";
+        let data = {
+            ecosystem_owner: ACCOUNT_NAME,
+            ecosystem_id: ecosystem.key,
+            user_id: user_id,
+            category_id: category_id,
+            achievement_id: achievement_id,
+            timestamp: Math.floor(Date.now() / 1000)
+        }
+
+        pushContractAction(contractFunction, data, (result) => {
+            console.log(result);
+            setTimeout(() => {
+                    hideLog();
+                },
+                500
+            );
+        });
+    });
+
+
+
+    $("#page_users .users_list").empty();
+
+    let max_rows = Math.ceil(ecosystem.users.length / 2);
+    var $user_table;
+    for (var i=0; i < ecosystem.users.length; i++) {
+        if (i % max_rows == 0) {
+            $user_table = $("<table class='user_table'></table>");
+            $("#page_users .users_list").append($user_table);
+        }
+        let user = ecosystem.users[i];
+
+        let $user_entry = $("<tr id='user_entry_" + user.key + "' class='item_row'></tr>");
+        $user_entry.append("<td class='user_name'>" + user.name + "</td>");
+        $user_entry.append("<td><span class='stylized_button stylized_button_tiny' id='edit_user_" + user.key + "'>edit</span></td>");
+        $user_table.append($user_entry);
+        if (i % 2 == 1) {
+            $("#user_entry_" + user.key).addClass("alt_row");
+        }
+
+        // Wire up its edit click
+        $("#edit_user_" + user.key).unbind();
+        $("#edit_user_" + user.key).click(function() {
+            $("#add_user_dialog_action").text("Edit");
+            $("#add_user_user_id").val(user.key);
+            $("#add_user_userid").val(user.userid);
+            $("#add_user_name").val(user.name);
+            $("#add_user_avatarurl").val(user.avatarurl);
+            $("#add_user_submit_button").text("save changes");
+            pageoverlay.showPageOverlay($("#add_user_container"));
+        });
+    }
+
+    pageoverlay.initPageOverlay($("#add_user_container"));
+    $("#add_user_button").unbind();
+    $("#add_user_button").click(function() {
+        $("#add_user_dialog_action").text("Add");
+        $("#add_user_name").val("");
+        $("#add_user_userid").val("");
+        $("#add_user_avatarurl").val("");
+        $("#add_user_submit_button").text("add user");
+        pageoverlay.showPageOverlay($("#add_user_container"));
+    });
+
+    $("#add_user_submit_button").unbind();
+    $("#add_user_submit_button").click(function() {
+        let userid = $("#add_user_userid").val();
+        let name = $("#add_user_name").val();
+        let avatarurl = $("#add_user_avatarurl").val();
+
+        if (userid == "") {
+            alert("userid is required!");
+            return;
+        }
+
+        if (name == "") {
+            alert("username is required!");
+            return;
+        }
+
+        let contractFunction = "adduser";
+        let data = {
+            ecosystem_id: ecosystem.key,
+            ecosystem_owner: ACCOUNT_NAME,
+            userid: userid,
+            user_name: name,
+            avatarurl: avatarurl
+        }
+        if ($("#add_user_dialog_action").text() == "Edit") {
+            contractFunction = "edituser";
+            data["user_id"] = parseInt($("#add_user_user_id").val());
+        }
+
+        pageoverlay.hidePageOverlay($("#add_user_container"));
+
+        pushContractAction(contractFunction, data, (result) => {
+            console.log(result);
+            setTimeout(() => {
+                    renderUsers(ecosystem.key);
+                },
+                1000
+            );
+        });
+    });
 
 
 

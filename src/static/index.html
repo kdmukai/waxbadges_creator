@@ -105,11 +105,20 @@
 
             table .label {
                 text-align: right;
+                color: #777;
+            }
+            table .required {
+                font-weight: bold;
+                color: #4ca7ac;
             }
             table .value {
                 text-align: left;
             }
-            table input[type='text'], table input[type='number'] {
+            select {
+                padding: 0.25em;
+                border-radius: 0.5em;
+            }
+            input[type='text'], input[type='number'] {
                 font-size: 1em;
                 padding: 0.25em;
                 border-radius: 0.5em;
@@ -136,6 +145,10 @@
 
             .clearfix:after {
                 clear: both;
+            }
+
+            .centered {
+                text-align: center;
             }
 
 
@@ -357,11 +370,11 @@
                     <input type="hidden" id="add_ecosys_ecosystem_id" />
                     <table>
                         <tr>
-                            <td class="label">account:</td>
+                            <td class="label required">account:</td>
                             <td class="value"><span class="account_name"></span></td>
                         </tr>
                         <tr>
-                            <td class="label">ecosystem name:</td>
+                            <td class="label required">ecosystem name:</td>
                             <td class="value"><input type="text" id="add_ecosys_name" /></td>
                         </tr>
                         <tr>
@@ -383,6 +396,7 @@
                             <td class="value"><input type="text" id="add_ecosys_logoassetname" placeholder="mylogo_256x256.png" /></td>
                         </tr>
                     </table>
+                    <br/>
                     <div class="stylized_button stylized_button_large" id="add_ecosys_submit_button">submit</div>
                 </div>
 
@@ -446,10 +460,11 @@
                     <input type="hidden" id="add_category_category_id" />
                     <table>
                         <tr>
-                            <td class="label">category name:</td>
+                            <td class="label required">category name:</td>
                             <td class="value"><input type="text" id="add_category_name" /></td>
                         </tr>
                     </table>
+                    <br/>
                     <div class="stylized_button stylized_button_large" id="add_category_submit_button">submit</div>
                 </div>
 
@@ -460,7 +475,7 @@
                     <input type="hidden" id="add_achievement_achievement_id" />
                     <table>
                         <tr>
-                            <td class="label">achievement name:</td>
+                            <td class="label required">achievement name:</td>
                             <td class="value"><input type="text" id="add_achievement_name" /></td>
                         </tr>
                         <tr>
@@ -480,6 +495,7 @@
                             </td>
                         </tr>
                     </table>
+                    <br/>
                     <div class="stylized_button stylized_button_large" id="add_achievement_submit_button">submit</div>
                 </div>
 
@@ -492,10 +508,41 @@
 
             <div id="page_users" class="page_container">
                 <style>
+                    .grant_container {
+                        text-align: center;
+                        display: inline-block;
+                        margin: auto;
+                        margin-bottom: 1em;
+                        padding: 1em;
+                        border-radius: 1em;
+                        border: 1px solid #333;
+                    }
+                    .grant_container select {
+                        font-size: 0.8em;
+                    }
                     .users_list {
                         margin-top: 1em;
                         margin-left: 2em;
                         margin-bottom: 2em;
+                        text-align: center;
+                    }
+                    .users_list .user_table {
+                        margin-right: 1em;
+                        border-collapse: collapse;
+                        display: inline-block;
+                        clear: left;
+                        vertical-align: top;
+                        position: relative;
+                    }
+                    .users_list .item_row {
+                        padding: 0.25em;
+                        padding-left: 0.5em;
+                    }
+
+                    .user_name {
+                        font-size: 0.80em;
+                        text-align: left;
+                        padding-left: 0.5em;
                     }
                 </style>
                 <div class="page_title"></div>
@@ -503,10 +550,43 @@
 
                 <div class="account_container">Active account: <span class="account_name account_display"></span></div>
 
+                <div class="centered">
+                    <div class="grant_container">
+                        Grant <select id="grant_achievements_list"></select> to <select id="grant_users_list"></select>&nbsp;&nbsp;&nbsp;<span class="stylized_button" id="grant_submit">submit</span>
+                    </div>
+                </div>
+
+
                 <div class="users_container page_content">
                     Your Users:
                     <div class="users_list"></div>
                     <span class="stylized_button" id="add_user_button">add user</span>
+                </div>
+
+
+
+                <div id="add_user_container" class="overlay_content_container">
+                    <div class="dialog_title"><span id="add_user_dialog_action">Add</span> user</div>
+                    <input type="hidden" id="add_user_category_id" />
+                    <input type="hidden" id="add_user_user_id" />
+                    <table>
+                        <tr>
+                            <td class="label required">your internal user id:</td>
+                            <td class="value"><input type="text" id="add_user_userid" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label required">display name:</td>
+                            <td class="value"><input type="text" id="add_user_name" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">avatar url:<br/>&nbsp;</td>
+                            <td class="value"><input type="text" id="add_user_avatarurl" />
+                                <div class="note">url relative to Ecosystem.baseasseturl or absolute https:// url</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <div class="stylized_button stylized_button_large" id="add_user_submit_button">submit</div>
                 </div>
 
 
