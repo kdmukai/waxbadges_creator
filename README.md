@@ -6,7 +6,7 @@ _A tool for game studios (and anyone else) to create their own WAXBadges achieve
 twitter: [@WAXBadges](https://twitter.com/WAXBadges)
 
 
-This creator is built as static html/JS that you run locally to create and manage your WAXBadges achievements. By running locally we can make some safe-ish security compromises that greatly enhance your workflow speed (i.e. hard-coding your private key for instant transaction signing; normally a MEGA no-no!!).
+This creator is meant to run locally to create and manage your WAXBadges achievements. By running locally we can make some safe-ish security compromises that greatly enhance your workflow speed (i.e. hard-coding your private key for instant transaction signing; normally a MEGA no-no!!).
 
 
 ### What is WAXBadges?
@@ -25,13 +25,7 @@ see the main repo: [https://github.com/kdmukai/waxbadges](https://github.com/kdm
     * _(you can also sell unused RAM back if you change your mind later)_
 * Clone this repo to your local machine
     * git clone https://github.com/kdmukai/waxbadges_creator.git .
-    * _optionally build the project yourself (see below)_
-* Customize the `build/local_settings--example.js` file
-    * Enter your account's private key stored in Scatter
-    * Enter the associated WAX account name (e.g. abc12.waa)
-* Double click `build/index.html` to run it as a locally-hosted webpage
-
-Now that you've hard-coded your private key you must keep these files secure on your local machine. Never upload or host these files on the web! The CREATOR tool looks and acts like a normal website, but treat it as if it were an app that is installed on your local machine. If anyone else on your team needs access, they'll have to download and customize their own copy.
+* Follow the "Running on your local machine" steps below
 
 
 ### How do I confirm that it worked?
@@ -41,6 +35,8 @@ Transactions through the CREATOR tool should be quite fast. You can view your st
 ### Wait, isn't this private key stuff risky?
 I mean, kinda. We're greatly reducing risk by only running this customized javascript on your local computer. But anytime you're directly handling a private key you are absolutely in a danger zone.
 
+You must keep these files secure on your local machine. Never upload or host these files on the web! The CREATOR tool looks and acts like a normal website, but treat it as if it were an app that is installed on your local machine. If anyone else on your team needs access, they'll have to download and customize their own copy.
+
 A future enhancement will enable an _authorize-in-Scatter_ option. This will keep your private key in Scatter (or, even better, in a hardware wallet that's connected to Scatter). But as a trade-off you'll have to manually approve every transaction. If you're adding 30 achievements to your new ecosystem it's going to be a pain, though hopefully we'll be able to batch transactions to reduce the number of approvals.
 
 
@@ -49,10 +45,9 @@ Add a hardware wallet like a Ledger to Scatter and change your WAX account's "ow
 
 
 
-## Building from source
+## Running on your local machine
 Grab the `npm` modules:
 ```
-npm init
 npm install
 ```
 
@@ -66,18 +61,12 @@ var PRIVATE_KEY = '';
 var ACCOUNT = '';   // e.g. WAX All Access account like 'abc12.waa' or 12-char WAX blockchain account
 ```
 
-Build for dev:
-```
-npm run dev
-```
-
 Run locally with Hot Module Replacement:
 ```
 webpack-dev-server --hot --host 0.0.0.0
 ```
 
-Build minified production payload:
+Point your web browser at:
 ```
-npm run build
+http://127.0.0.1:8080
 ```
-

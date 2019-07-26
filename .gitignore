@@ -9,6 +9,7 @@
 *.abi
 __pycache__
 *.pyc
+build/
 
 # Precompiled Headers
 *.gch
